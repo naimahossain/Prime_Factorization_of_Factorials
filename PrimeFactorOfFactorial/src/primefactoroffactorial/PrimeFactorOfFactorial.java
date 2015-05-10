@@ -14,16 +14,35 @@ import java.util.Scanner;
  */
 public class PrimeFactorOfFactorial {
     ArrayList<Integer> _primeArray = new ArrayList<>();
+    int[] _primeFactCount = new int[100];
     
-     void Print(ArrayList<Integer> primeFactors){
-        primeFactors.stream().forEach((factor)->{
-            System.out.print(factor+", ");
-        });
+     void Print(int num){
+        System.out.println("Prime factors for "+num+"! are: ");
+        for(int i = 0; i < 100; i++){
+            int value = _primeFactCount[i];
+            if(value > 0)
+                System.out.print("("+i+","+value+"),");
+        }
         System.out.println();
     }
      
     void Init(){
           InitPrimeFactorList();
+    }
+    
+    void InitPrimeFactCount(){
+        for(int i = 0; i < 100; i++)
+            _primeFactCount[i] = 0;
+    }
+    
+    void SetPrimeFactOfFactorial(int n){
+        while(n>1){
+            ArrayList<Integer> al = GetPrimeFactors(n);
+            al.stream().forEach((a)->{
+                _primeFactCount[a]++;
+            });
+            n--;
+        }
     }
     
     void InitPrimeFactorList (){ 
@@ -37,8 +56,6 @@ public class PrimeFactorOfFactorial {
         ArrayList<Integer> primeFactors = new ArrayList<>(); 
         if(IsPrime(n) || n == 1){
             primeFactors.add(n);
-            if(n != 1)
-                primeFactors.add(1);
             return primeFactors;
         }
         int newN = n;
@@ -80,11 +97,13 @@ public class PrimeFactorOfFactorial {
     public static void main(String[] args) {
         PrimeFactorOfFactorial pf = new PrimeFactorOfFactorial();
         pf.Init();
-        System.out.println("Enter a number between 1-100 to see it's prime factors");
+        System.out.println("Enter a number between 1-100 to see prime factors of it's factorial.");
         System.out.println("Enter out of range number to exit");
         int n = pf.Input();
         while(n >= 1 && n <= 100){
-            pf.Print(pf.GetPrimeFactors(n));
+            pf.InitPrimeFactCount();
+            pf.SetPrimeFactOfFactorial(n);
+            pf.Print(n);
             n = pf.Input();
         }
     }
